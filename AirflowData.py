@@ -9,7 +9,7 @@ import pandas as pd
 
 default_args={
         'owner':'eun',
-        'start_date':dt.datetime(2024,3,19),
+        'start_date':dt.datetime(2024,3,20),
         'retries':1,
         'retry_delay':dt.timedelta(minutes=5),
         }
@@ -30,10 +30,10 @@ def filterData():
 
 with DAG('CleanData',
         default_args=default_args,
-        schedule_interval=timedelta(minutes=5),
+        schedule_interval=timedelta(hours=1),
         ) as dag:
     cleanData=PythonOperator(task_id='clean',python_callable=cleanScooter)
     selectData=PythonOperator(task_id='filter',python_callable=filterData)
-    copyFile=BashOperator(task_id='copy', bash_command='cp may23-june3.csv /home/eun/Desktop')
+    copyFile=BashOperator(task_id='copy', bash_command='cp /home/eun/may23-june3.csv /home/eun/Desktop')
 
 cleanData>>selectData>>copyFile
